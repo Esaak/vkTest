@@ -1,0 +1,227 @@
+openapi: 3.0.0
+info:
+  title: Filmoteka API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /actors:
+    post:
+      summary: Create an actor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Actor'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Actor'
+    put:
+      summary: Update an actor
+      parameters:
+        - name: id
+          in: path
+          description: Actor ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Actor'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Actor'
+    delete:
+      summary: Delete an actor
+      parameters:
+        - name: id
+          in: path
+          description: Actor ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /movies:
+    post:
+      summary: Create a movie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+    put:
+      summary: Update a movie
+      parameters:
+        - name: id
+          in: path
+          description: Movie ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+    delete:
+      summary: Delete a movie
+      parameters:
+        - name: id
+          in: path
+          description: Movie ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: No Content
+  /movies:
+    get:
+      summary: Get movies
+      parameters:
+        - name: sort_by
+          in: query
+          description: Sort by
+          schema:
+            type: string
+            enum: [title, rating, release_date]
+        - name: sort_order
+          in: query
+          description: Sort order
+          schema:
+            type: string
+            enum: [asc, desc]
+        - name: title
+          in: query
+          description: Title fragment
+          schema:
+            type: string
+        - name: actor
+          in: query
+          description: Actor fragment
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+  /actors:
+    get:
+      summary: Get actors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Actor'
+  /search/movies:
+    get:
+      summary: Search movies
+      parameters:
+        - name: title
+          in: query
+          description: Title fragment
+          schema:
+            type: string
+        - name: actor
+          in: query
+          description: Actor fragment
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+  /search/actors:
+    get:
+      summary: Search actors
+      parameters:
+        - name: name
+          in: query
+          description: Name fragment
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Actor'
+components:
+  schemas:
+    Actor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        gender:
+          type: string
+        date_of_birth:
+          type: string
+          format: date
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          maxLength: 150
+        description:
+          type: string
+          maxLength: 1000
+        release_date:
+          type: string
+          format: date
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 10
+        actors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Actor'
